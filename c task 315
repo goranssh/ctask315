@@ -1,0 +1,49 @@
+bool State = false;
+
+void setup()
+{
+  pinMode(13, OUTPUT);
+  pinMode(3, INPUT);
+  pinMode(A0, INPUT); // Set soil moisture pin as INPUT
+  pinMode(2, INPUT_PULLUP);
+  Serial.begin(9600);
+  
+  attachInterrupt(digitalPinToInterrupt(2), Interrupted, FALLING);
+}
+
+void loop()
+{
+  if(State)
+  {
+    Serial.println("Interrupted");
+    soil();
+    delay(1000);
+    State = false;
+  }
+
+  if(digitalRead(3) == HIGH)
+  {
+    digitalWrite(13, HIGH);
+    Serial.println("There is movement");
+  }
+  else
+  {
+    digitalWrite(13, LOW);
+    Serial.println("No movement");
+  }
+  
+  delay(1000);
+}    
+
+void Interrupted()
+{
+  State = true;
+}
+
+void soil()
+{
+  int moisture = analogRead(A0);
+  Serial.println("Soil Moisture Interrupted");
+  Serial.print("Soil Moisture: ");
+  Serial.println(moisture);
+}
